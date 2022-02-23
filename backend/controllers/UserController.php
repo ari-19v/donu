@@ -6,7 +6,6 @@ namespace backend\controllers;
 use frontend\models\ResendVerificationEmailForm;
 use frontend\models\VerifyEmailForm;
 use Yii;
-use yii\db\Query;
 use yii\base\InvalidArgumentException;
 use yii\web\BadRequestHttpException;
 use backend\models\User;
@@ -53,17 +52,11 @@ class UserController extends Controller
     public function actionIndex()
     {
         $searchModel = new UserSearch();
-       
-        // $model = where('estatus', 10);
-        $pageList = User::find()->select(['id','username'])->where(['status' =>10])->asArray()->all();
         $dataProvider = $searchModel->search($this->request->queryParams);
-        $data =User::find()->select(['id','username'])->where(['status' =>10])->asArray()->all();
-        // $this->searchModel = user::find()->where(['status' =>10])->all();
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'data' => $data,
-            // 'pageList' => $pageList,
         ]);
     }
 
@@ -122,8 +115,8 @@ class UserController extends Controller
      */
     public function actionUpdate($id)
     {
-        // $model = $this->findModel($id);
-        $model = User::find()->where(['status' => 1]);
+        $model = $this->findModel($id);
+
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
