@@ -7,6 +7,12 @@ use Yii;
 use yii\web\uploadedFile;
 use yii\base\Model;
 use dosamigos\fileinput\FileInput;
+use Imagine\Image\ManipulatorInterface;
+
+use yii\behaviors\TimestampBehavior;
+use yii\db\Expression;
+
+use yii\imagine\Image;
 
 
 /**
@@ -20,7 +26,11 @@ use dosamigos\fileinput\FileInput;
  */
 class Productos extends \yii\db\ActiveRecord
 {
-  
+
+     /**
+     * @var UploadedFile
+     */
+    public $imagenFile;
     /**
      * {@inheritdoc}
      */
@@ -57,16 +67,47 @@ class Productos extends \yii\db\ActiveRecord
             'imagen' => 'Imagen',
         ];
     }
+    public function getIcon(){
+        return '/uploads/thumbs/' . $this->imagen;
+    }
+
+    public function getFullImage(){
+        return '/uploads/thumbs/' . $this->imagen;
+    }
+
+    public function removeOldPreviews(){
+        if ($this->imagen){
+            @unlink(getcwd() . '/uploads/' . $this->imagen);
+            @unlink(getcwd() . '/uploads/thumbs/' . $this->imagen);
+        }
+    }
 
     public function upload()
     {
         if ($this->validate()) {
-            $this->imagen->saveAs('uploads/' . $this->imagen->baseName . '.' . $this->imagen->extension);
+            if ($this->imagenFile){
+                $this->removeOldPreviews();
+                $this->imagen = uniqid($this->imagenFile->baseName) . '.' . $this->imagenFile->extension;
+                $this->imagenFile->saveAs('uploads/' . $this->imagen);
+                Image::thumbnail('uploads/' . $this->imagen, 100, 100, ManipulatorInterface::THUMBNAIL_OUTBOUND)
+                    ->save('uploads/thumbs/' . $this->imagen, ['quality' => 50]);
+            }
             return true;
         } else {
             return false;
         }
     }
+
+
+    // public function upload()
+    // {
+    //     if ($this->validate()) {
+    //         $this->imagen->saveAs('uploads/' . $this->imagen->baseName . '.' . $this->imagen->extension);
+    //         return true;
+    //     } else {
+    //         return false;
+    //     }
+    // }
 
     
 }

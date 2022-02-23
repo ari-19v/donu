@@ -20,9 +20,14 @@ use yii\widgets\ActiveForm;
             </div>
         </div>
     </div>
+
+    <?php
+    $this->registerJsFile('js/main.js', ['depends' => [\yii\web\JqueryAsset::className()]]);
+?>
+
     <div class="productos-form">
 
-        <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
             <div class="form-row">
                 <div class="col-6">
                     <?= $form->field($model, 'nombre')->textInput(['maxlength' => true]) ?>
@@ -30,7 +35,11 @@ use yii\widgets\ActiveForm;
                 </div>
                 <div class="col-6">
                     <?= $form->field($model, 'precio')->textInput(['maxlength' => true]) ?>
-                    <?= $form->field($model, 'imagen')->fileInput() ?>
+                    <!-- $form->field($model, 'imagen')->fileInput() ?> -->
+                    <div class="col col-sm-4">
+            <?= $form->field($model, 'imagenFile')->fileInput(array('id'=>'uploadCtl')) ?>
+            <img id="imagen" <?php if ($model->imagen){ ?>src="<?= $model->getFullImage() ?>"<?php } ?> style="max-width: 200px;"/>
+        </div>
                 </div>
             </div>
         </div>
@@ -38,7 +47,7 @@ use yii\widgets\ActiveForm;
         <!-- $form->field($model, 'imagen')->textInput(['maxlength' => true]) ?> -->
 
         <div class="form-group">
-            <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
         </div>
 
         <?php ActiveForm::end(); ?>

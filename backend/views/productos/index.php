@@ -12,6 +12,7 @@ use backend\models\Productos;
 
 $this->title = Yii::t('app', 'Productos');
 $this->params['breadcrumbs'][] = $this->title;
+$this->registerJsFile('js/main.js', ['depends' => [\yii\web\JqueryAsset::className()]]);
 ?>
 
 <section class=" containe bg-light">
@@ -51,7 +52,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 'nombre',
                 'descripcion',
                 'precio',
-                'imagen',
+                [
+                    'attribute' => 'imagen',
+                    'value' => function ($data) { return Html::img($data->getIcon(), array('data-zoom' => $data->getFullImage(), 'class' => 'thumb-list')); },
+                    'format' => 'raw'
+                ],
                 [
                     'class' => ActionColumn::className(),
                     'urlCreator' => function ($action, Productos $model, $key, $index, $column) {

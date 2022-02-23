@@ -7,10 +7,12 @@ use backend\models\search\ProductosSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use Yii;
-use yii\web\uploadedFile;
-use yii\base\Model;
-use dosamigos\fileinput\FileInput;
+
+use app\models\ProductoSearch;
+use yii\filters\AccessControl;
+
+use yii;
+use yii\web\UploadedFile;
 
 /**
  * ProductosController implements the CRUD actions for Productos model.
@@ -35,6 +37,27 @@ class ProductosController extends Controller
         );
     }
 
+    private function getFilters(){
+
+        $session = Yii::$app->session;
+
+        $searchParams = Yii::$app->request->queryParams;
+
+        if (isset($searchParams['reset'])){
+            unset($searchParams['ProductosSearch']);
+            $session->remove('productos.search_params');
+        }
+
+        if (!isset($searchParams['ProductosSearch'])){
+            $searchParams['ProductosSearch'] = $session->get('productos.search_params');
+        }else{
+            $session->set('productos.search_params', $searchParams['ProductosSearch']);
+        }
+
+        return $searchParams;
+    }
+
+
     /**
      * Lists all Productos models.
      *
@@ -43,7 +66,8 @@ class ProductosController extends Controller
     public function actionIndex()
     {
         $searchModel = new ProductosSearch();
-        $dataProvider = $searchModel->search($this->request->queryParams);
+        $dataProvider = $searchModel->search($this->getFilters());
+        // $dataProvider = $searchModel->search($this->request->queryParams);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -64,32 +88,33 @@ class ProductosController extends Controller
         ]);
     }
 
+   
     /**
      * Creates a new Productos model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
+
+     
     public function actionCreate()
     {
         $model = new Productos();
 
-      
+        
+        if ($model->load(Yii::$app->request->post())) {
 
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-
-                if (Yii::$app->request->isPost) {
-                    $model->imagen = UploadedFile::getInstance($model, 'imagen');
-                    if ($model->upload()) {
-                        // el archivo se subió exitosamente
-                        return;
-                    }
-                }
-                return $this->redirect(['index', 'idProducto' => $model->idProducto]);
+            $model->imagenFile = UploadedFile::getInstance($model, 'imagenFile');
+            if ($model->upload() && $model->save()) {
+                return $this->redirect(['index']);
             }
-        } else {
-            $model->loadDefaultValues();
         }
+        // if ($this->request->isPost) {
+        //     if ($model->load($this->request->post()) && $model->save()) {
+        //         return $this->redirect(['view', 'idProducto' => $model->idProducto]);
+        //     }
+        // } else {
+        //     $model->loadDefaultValues();
+        // }
 
         return $this->render('create', [
             'model' => $model,
@@ -143,6 +168,6 @@ class ProductosController extends Controller
             return $model;
         }
 
-        throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+        throw new NotFoundHttpException('The requested page does not exist.');
     }
 }

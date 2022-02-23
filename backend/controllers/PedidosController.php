@@ -47,6 +47,14 @@ class PedidosController extends Controller
         ]);
     }
 
+    public function actionConsultarPedidos($idUsuario){
+        
+        $model = new Pedidos();
+        return $model::find()->where(['idCliente'=>$idUsuario])->excecuteAll();
+
+        
+    }
+
     /**
      * Displays a single Pedidos model.
      * @param int $idPedido Id Pedido

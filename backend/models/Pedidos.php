@@ -67,10 +67,9 @@ class Pedidos extends \yii\db\ActiveRecord
         ];
     }
 
-    public function beforeSave($insert){
-       
+    public function beforeSave($insert){      
       
-        $this->idEncargado= yii::$app->user->id;
+        $this->idEncargado=yii::$app->user->id;
         return true;
     }
 
@@ -126,7 +125,7 @@ class Pedidos extends \yii\db\ActiveRecord
 
     public function getDetallePedido()
     {
-        return $this->hasMany(DetallePedido::className(), ['idDetallePedido' => 'idPedido']);
+        return $this->hasMany(DetallePedido::className(), ['idPedido' => 'idPedido']);
     }
 
    

@@ -31,27 +31,31 @@ use yii\helpers\Url;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <div class="pedidos-form"><br>       
-                <div class="form-row">
-                    <div class="col-4">
-                        <?php
-                            $users =ArrayHelper::map(User::find()->orderBy('username')->all(), 'id', 'username');
-                            $estado =ArrayHelper::map(EstadoPedidos::find()->orderBy('Nombre')->all(), 'idEstado', 'Nombre');
-                        ?>
-                        <!--  $form->field($model, 'idPedido')->dropDownList($users) ?>                        -->
-                        <?= $form->field($model, 'idCliente')->dropDownList($users)?>
-                    </div>
-                    <div class="col-4">
-                        <?= $form->field($model, 'idRepartidor')->dropDownList($users)?>    
-                        <?= $form->field($model, 'idMensajero')->dropDownList($users) ?>
-                    </div>
-                    <div class="col-4">
-                       
-                        <?= $form->field($model, 'idEstado')->dropDownList($estado)?>
-                        <?= $form->field($model, 'rireccion')->textInput(['maxlength' => true]) ?>
-                    </div>
-                </div><br>
-                <div class="col-12 bg-white">
+    <div class="form-row"><br>
+                <div class="col-7"><br>
+                    <div class="form-row">
+                        <div class="col-4">
+                            <?php
+                                $users =ArrayHelper::map(User::find()->orderBy('username')->all(), 'id', 'username');
+                                $estado =ArrayHelper::map(EstadoPedidos::find()->orderBy('Nombre')->all(), 'idEstado', 'Nombre');
+                            ?>
+                            <!--  $form->field($model, 'idPedido')->dropDownList($users) ?>                        -->
+                            <?= $form->field($model, 'idCliente')->dropDownList($users)?>
+                        </div>
+                        <div class="col-4">
+                        <!-- <fieldset disabled>  $form->field($model, 'idRepartidor')->textInput(yii::$app->user->id)?></fieldset> -->
+                            <?= $form->field($model, 'idRepartidor')->dropDownList($users)?>    
+                            <?= $form->field($model, 'idMensajero')->dropDownList($users) ?>
+                        </div>
+                        <div class="col-4">
+                        
+                            <?= $form->field($model, 'idEstado')->dropDownList($estado)?>
+                            <?= $form->field($model, 'rireccion')->textInput(['maxlength' => true]) ?>
+                        </div>
+                    </div><br>
+                </div>
+
+                <div class="col-5 bg-white"><br>
                     <h2 class="bg-success text-white">PRODUCTOS</h2>
                     <?=
                     \yii\grid\GridView::widget([

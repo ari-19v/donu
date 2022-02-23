@@ -47,7 +47,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 'nombre',
                 'descripcion',
                 'precio',
-                'imagen',
+                [
+                    'attribute'=>'imagen',
+                    'value'=>$model->getIcon(),
+                    'format' => ['image',['width'=>'100','height'=>'100']]
+                ],
             ],
         ]) ?>
 

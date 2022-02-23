@@ -5,6 +5,7 @@ use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
 use backend\models\User;
+use backend\components\TreeList;
 
 /* @var $this yii\web\View */
 /* @var $searchModel backend\models\search\UserSearch */
@@ -45,6 +46,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
          'filterModel' => $searchModel,
+         'data' => $data,
+        //  'pageList' => $pageList,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 

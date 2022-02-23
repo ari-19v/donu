@@ -31,6 +31,7 @@ class m220220_141751_pedidos extends Migration
            
             $this->addForeignKey('FK_cli_donu', 'pedidos', 'idCliente', 'User', 'id');
             $this->addForeignKey('FK_mens_donu', 'pedidos', 'idMensajero', 'User', 'id');
+            $this->addForeignKey('FK_encar_donu', 'pedidos', 'idEncargado', 'User', 'id');
             $this->addForeignKey('FK_rep_donu', 'pedidos', 'idRepartidor', 'User', 'id');
             $this->addForeignKey('FK_esta_donu', 'pedidos', 'idEstado', 'estado_pedidos', 'idEstado');
     }
@@ -43,6 +44,7 @@ class m220220_141751_pedidos extends Migration
         
         $this->dropForeignKey('FK_cli_donu', 'pedidos');
         $this->dropForeignKey('FK_mens_donu', 'pedidos');
+        $this->dropForeignKey('FK_encar_donu', 'pedidos');
         $this->dropForeignKey('FK_rep_donu', 'pedidos');
         $this->dropForeignKey('FK_esta_donu', 'pedidos');
       
